@@ -1,0 +1,8 @@
+
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ö‰—ûıÿÿÿÿ8¬‚ÿ€¯2
+l
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(¿Šá8ÊµÂ¯2
+£
+java:S11866"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(é òùÿÿÿÿ8¥ä’¯2
+H
+java:S1168<"+Return an empty collection instead of null.(¥¹ï8ÖµÂ¯2

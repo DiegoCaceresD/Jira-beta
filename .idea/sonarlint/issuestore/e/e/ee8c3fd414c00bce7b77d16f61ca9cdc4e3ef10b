@@ -1,0 +1,11 @@
+
+d
+java:S2094	"BRemove this empty class, write its code or make it an "interface".(›æğşúÿÿÿÿ8™ñü®2
+i
+java:S1128"GRemove this unused import 'com.proyecto.jirabeta.connection.DBManager'.(ÉÑË—ÿÿÿÿÿ8Ÿñü®2
+M
+java:S1128"0Remove this unused import 'java.sql.Connection'.(¥ËôÖ8Ÿñü®2
+O
+java:S1128"2Remove this unused import 'java.sql.SQLException'.(ÛïÆŸ8Ÿñü®2
+L
+java:S1128"/Remove this unused import 'java.sql.Statement'.(ÏÖÔø8Ÿñü®2
