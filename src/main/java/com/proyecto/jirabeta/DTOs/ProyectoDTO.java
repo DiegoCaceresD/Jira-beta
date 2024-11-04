@@ -1,8 +1,11 @@
-package com.proyecto.jirabeta.entities;
+package com.proyecto.jirabeta.DTOs;
+
+import com.proyecto.jirabeta.entities.Empleado;
+import com.proyecto.jirabeta.entities.Tarea;
 
 import java.util.List;
 
-public class Proyecto {
+public class ProyectoDTO {
     private Integer id;
     private String nombre;
     private List<Tarea> tareas;
@@ -42,10 +45,10 @@ public class Proyecto {
 
     @Override
     public String toString() {
-        return "Proyecto{" +
+        return "ProyectoDTO{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", tarea=" + tareas +
+                ", tareas=" + tareas +
                 ", empleados=" + empleados +
                 '}';
     }
