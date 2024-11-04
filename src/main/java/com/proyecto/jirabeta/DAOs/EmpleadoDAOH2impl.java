@@ -15,7 +15,7 @@ import java.util.List;
 public class EmpleadoDAOH2impl implements EmpleadoDAO {
 
     @Override
-    public void crearEmpleado(Empleado empleado) throws DuplicateKeyException {
+    public void crearEmpleado(Empleado empleado) throws DAOException, DuplicateKeyException {
         String nombre = empleado.getNombre();
         String apellido = empleado.getApellido();
         String dni = empleado.getDni();
@@ -39,8 +39,9 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
             try {
                 c.rollback();
                 if (e.getErrorCode() == 23505) {
-                    throw new DuplicateKeyException("El empleado con dni " + empleado.getDni() +" ya existe");
+                    throw new DuplicateKeyException("El empleado con dni " + empleado.getDni() + " ya existe");
                 }
+                throw new DAOException("Error al crear el empleado", e);
             } catch (SQLException e1) {
                 e.printStackTrace();
             }
@@ -67,19 +68,18 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
             ps.setBoolean(5, empleado.isDisponible());
             ps.setString(6, empleado.getDni());
 
-           int registroAfectado = ps.executeUpdate();
-           if (registroAfectado == 0){
-               throw new EntityNotFoundExcepcion("Empleado", empleado.getDni());
-           }
+            int registroAfectado = ps.executeUpdate();
+            if (registroAfectado == 0) { // hacer como el de terea
+                throw new EntityNotFoundExcepcion("Empleado", empleado.getDni());
+            }
             c.commit();
         } catch (SQLException e) {
             try {
                 c.rollback();
-                e.printStackTrace();
-                throw new DAOException("Error al actualizar el empleado", e);
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
+            throw new DAOException("Error al actualizar el empleado", e);
         } finally {
             try {
                 c.close();
@@ -90,22 +90,24 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
     }
 
     @Override
-    public void eliminarEmpleadoById(long id) throws DAOException, EntityNotFoundExcepcion {
+    public void eliminarEmpleadoById(Integer id) throws DAOException, EntityNotFoundExcepcion {
         Connection c = DBManager.connect();
         try {
             String sql = "DELETE FROM empleados WHERE id = '" + id + "'";
             Statement s = c.createStatement();
             int registrosAfectados = s.executeUpdate(sql);
-            if (registrosAfectados == 0 ){
+            if (registrosAfectados == 0) {
                 throw new EntityNotFoundExcepcion("empleado", id);
-            };
+            }
+            ;
             c.commit();
         } catch (SQLException e) {
             try {
                 c.rollback();
             } catch (SQLException ex) {
-                throw new DAOException();
+                ex.printStackTrace();
             }
+            throw new DAOException("Error al eliminar el empleado", e);
         } finally {
             try {
                 c.close();
@@ -117,22 +119,22 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
 
     @Override
     public Empleado obtenerEmpleadoByDni(String dni) throws DAOException, EntityNotFoundExcepcion {
-            String sql = "SELECT * FROM empleados WHERE dni = '" + dni + "'";
-            Connection c = DBManager.connect();
-            Empleado empleado = new Empleado();
+        String sql = "SELECT * FROM empleados WHERE dni = '" + dni + "'";
+        Connection c = DBManager.connect();
+        Empleado empleado = new Empleado();
         try {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(sql);
 
-            if (rs.next()){
-                empleado.setId(rs.getLong("id"));
+            if (rs.next()) {
+                empleado.setId(rs.getInt("id"));
                 empleado.setNombre(rs.getString("nombre"));
                 empleado.setApellido(rs.getString("apellido"));
                 empleado.setEmail(rs.getString("email"));
                 empleado.setDni(rs.getString("dni"));
                 empleado.setCapacity(rs.getFloat("capacity"));
                 empleado.setDisponible(rs.getBoolean("disponible"));
-            }else {
+            } else {
                 throw new EntityNotFoundExcepcion("empleado", dni);
             }
             c.commit();
@@ -140,8 +142,9 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
             try {
                 c.rollback();
             } catch (SQLException ex) {
-                throw new DAOException("Error al buscar el empleado con DNI " + dni, e);
+                ex.printStackTrace();
             }
+            throw new DAOException("Error al crear el empleado", e);
         } finally {
             try {
                 c.close();
@@ -153,7 +156,45 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
     }
 
     @Override
-    public List<Empleado> listarEmpleados() {
+    public Empleado obtenerEmpleadoById(Integer id) throws DAOException, EntityNotFoundExcepcion {
+        String sql = "SELECT * FROM empleados WHERE id = '" + id + "'";
+        Connection c = DBManager.connect();
+        Empleado empleado = new Empleado();
+        try {
+            Statement s = c.createStatement();
+            ResultSet rs = s.executeQuery(sql);
+
+            if (rs.next()) {
+                empleado.setId(rs.getInt("id"));
+                empleado.setNombre(rs.getString("nombre"));
+                empleado.setApellido(rs.getString("apellido"));
+                empleado.setEmail(rs.getString("email"));
+                empleado.setDni(rs.getString("dni"));
+                empleado.setCapacity(rs.getFloat("capacity"));
+                empleado.setDisponible(rs.getBoolean("disponible"));
+            } else {
+                throw new EntityNotFoundExcepcion("empleado", id);
+            }
+            c.commit();
+        } catch (SQLException e) {
+            try {
+                c.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            throw new DAOException("Error al crear el empleado", e);
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return empleado;
+    }
+
+    @Override
+    public List<Empleado> listarEmpleados() throws DAOException {
         List<Empleado> empleadoList = new ArrayList<>();
         String sql = "SELECT * FROM empleados";
         Connection c = DBManager.connect();
@@ -163,7 +204,7 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
 
             while (rs.next()) {
                 Empleado empleado = new Empleado();
-                empleado.setId(rs.getLong("id"));
+                empleado.setId(rs.getInt("id"));
                 empleado.setNombre(rs.getString("nombre"));
                 empleado.setApellido(rs.getString("apellido"));
                 empleado.setEmail(rs.getString("email"));
@@ -179,6 +220,7 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
+            throw new DAOException("Error al crear el empleado", e);
         } finally {
             try {
                 c.close();

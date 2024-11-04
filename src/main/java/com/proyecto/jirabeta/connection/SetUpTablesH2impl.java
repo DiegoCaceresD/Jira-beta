@@ -11,7 +11,7 @@ public class SetUpTablesH2impl implements SetUpTablesDAO {
 
         String sqlProyectos = "CREATE TABLE proyectos (id INTEGER IDENTITY, nombre VARCHAR(256) UNIQUE)";
         String sqlEmpleados = "CREATE TABLE empleados (id INTEGER IDENTITY, nombre VARCHAR(256), apellido VARCHAR(256), dni VARCHAR(256) UNIQUE , email  VARCHAR(256), capacity FLOAT, disponible BIT)";
-        String sqlTareas = "CREATE TABLE tareas (id INTEGER IDENTITY PRIMARY KEY, horasEstimadas FLOAT, titulo VARCHAR(256), descripcion VARCHAR(256), estimacion VARCHAR(256), prioridad VARCHAR(256), responsable INTEGER,proyecto INTEGER,     FOREIGN KEY (responsable) REFERENCES empleados(id), FOREIGN KEY (proyecto) REFERENCES proyectos(id))";
+        String sqlTareas = "CREATE TABLE tareas (id INTEGER IDENTITY PRIMARY KEY, horasEstimadas FLOAT, titulo VARCHAR(256) UNIQUE , descripcion VARCHAR(256), estimacion VARCHAR(256), prioridad VARCHAR(256), responsable INTEGER,proyecto INTEGER,     FOREIGN KEY (responsable) REFERENCES empleados(id), FOREIGN KEY (proyecto) REFERENCES proyectos(id))";
         try {
             Statement s = c.createStatement();
             DatabaseMetaData metaData = c.getMetaData();

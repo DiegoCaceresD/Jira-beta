@@ -3,23 +3,23 @@ package com.proyecto.jirabeta.entities;
 import java.util.List;
 
 public class Proyecto {
-    private long id;
+    private Integer id;
     private String nombre;
     private List<Tarea> tareas;
     private List<Empleado> empleados;
 
-    public Proyecto(long id, String nombre, List<Tarea> tarea, List<Empleado> empleados) {
+    public Proyecto(Integer id, String nombre, List<Tarea> tarea, List<Empleado> empleados) {
         this.id = id;
         this.nombre = nombre;
         this.tareas = tarea;
         this.empleados = empleados;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

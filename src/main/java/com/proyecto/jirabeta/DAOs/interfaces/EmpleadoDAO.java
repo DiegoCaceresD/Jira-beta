@@ -12,11 +12,12 @@ public interface EmpleadoDAO {
 
     void crearEmpleado(Empleado empleado) throws DAOException, DuplicateKeyException;
 
-    void eliminarEmpleadoById(long id) throws DAOException, EntityNotFoundExcepcion;
+    void eliminarEmpleadoById(Integer id) throws DAOException, EntityNotFoundExcepcion;
 
     void actualizarEmpleado(Empleado empleado) throws DAOException, EntityNotFoundExcepcion;
 
     Empleado obtenerEmpleadoByDni (String dni) throws DAOException, EntityNotFoundExcepcion;
+    Empleado obtenerEmpleadoById (Integer id) throws DAOException, EntityNotFoundExcepcion;
 
     List<Empleado> listarEmpleados () throws DAOException;
 

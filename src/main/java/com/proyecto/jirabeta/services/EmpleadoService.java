@@ -15,11 +15,21 @@ import java.util.List;
 
 public class EmpleadoService {
 
-    public ResponseDTO crearEmpleado(EmpleadoDTO empleadoDTO)  {
-        ResponseDTO responseDTO = new ResponseDTO();
-        EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
+    ResponseDTO responseDTO = new ResponseDTO();
+    EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
+    EmpleadoMapper empleadoMapper = new EmpleadoMapper();
+
+    public EmpleadoService() {
+    }
+
+    public EmpleadoService(ResponseDTO responseDTO, EmpleadoDAO empleadoDAO, EmpleadoMapper empleadoMapper) {
+        this.responseDTO = responseDTO;
+        this.empleadoDAO = empleadoDAO;
+        this.empleadoMapper = empleadoMapper;
+    }
+
+    public ResponseDTO crearEmpleado(EmpleadoDTO empleadoDTO) {
         Empleado empleado;
-        EmpleadoMapper empleadoMapper = new EmpleadoMapper();
         try {
             empleado = empleadoMapper.empleadoDtoToEmpleado(empleadoDTO);
             empleadoDAO.crearEmpleado(empleado);
@@ -33,11 +43,8 @@ public class EmpleadoService {
         return responseDTO;
     }
 
-    public ResponseDTO actualizarEmpleado(EmpleadoDTO empleadoDTO)  {
-        ResponseDTO responseDTO = new ResponseDTO();
-        EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
+    public ResponseDTO actualizarEmpleado(EmpleadoDTO empleadoDTO) {
         Empleado empleado;
-        EmpleadoMapper empleadoMapper = new EmpleadoMapper();
         try {
             empleado = empleadoMapper.empleadoDtoToEmpleado(empleadoDTO);
             empleadoDAO.actualizarEmpleado(empleado);
@@ -46,13 +53,12 @@ public class EmpleadoService {
         } catch (EntityNotFoundExcepcion | DAOException e) {
             responseDTO.setErrorMsg(e.getMessage());
             responseDTO.setSuccess(false);
+            return responseDTO;
         }
         return responseDTO;
     }
 
-    public ResponseDTO eliminarEmpleadoById(long id)  {
-        ResponseDTO responseDTO = new ResponseDTO();
-        EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
+    public ResponseDTO eliminarEmpleadoById(Integer id) {
         try {
             empleadoDAO.eliminarEmpleadoById(id);
             responseDTO.setData(id);
@@ -65,14 +71,11 @@ public class EmpleadoService {
         return responseDTO;
     }
 
-    public ResponseDTO listarEmpleados() throws DAOException {
-        ResponseDTO responseDTO = new ResponseDTO();
-        EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
+    public ResponseDTO listarEmpleados() {
         List<EmpleadoDTO> empleadoDTOList = new ArrayList<>();
-        EmpleadoMapper empleadoMapper = new EmpleadoMapper();
         try {
             List<Empleado> empleadoList = empleadoDAO.listarEmpleados();
-            for (Empleado em: empleadoList) {
+            for (Empleado em : empleadoList) {
                 empleadoDTOList.add(empleadoMapper.empleadoToEmpleadoDto(em));
             }
             responseDTO.setData(empleadoDTOList);
@@ -80,8 +83,41 @@ public class EmpleadoService {
         } catch (DAOException d) {
             responseDTO.setErrorMsg(d.getMessage());
             responseDTO.setSuccess(false);
+            return responseDTO;
         }
         return responseDTO;
     }
+
+    public ResponseDTO obtenerEmpleadoByDni(String dni) {
+        try {
+            Empleado empleado = empleadoDAO.obtenerEmpleadoByDni(dni);
+            if (empleado != null){
+                EmpleadoDTO empleadoDTO = empleadoMapper.empleadoToEmpleadoDto(empleado);
+                responseDTO.setData(empleadoDTO);
+                responseDTO.setSuccess(true);
+            }
+        } catch (DAOException | EntityNotFoundExcepcion d) {
+            responseDTO.setErrorMsg(d.getMessage());
+            responseDTO.setSuccess(false);
+            return responseDTO;
+        }
+        return responseDTO;
+    }
+    public ResponseDTO obtenerEmpleadoById(Integer id) {
+        try {
+            Empleado empleado = empleadoDAO.obtenerEmpleadoById(id);
+            if (empleado != null){
+                EmpleadoDTO empleadoDTO = empleadoMapper.empleadoToEmpleadoDto(empleado);
+                responseDTO.setData(empleadoDTO);
+                responseDTO.setSuccess(true);
+            }
+        } catch (DAOException | EntityNotFoundExcepcion d) {
+            responseDTO.setErrorMsg(d.getMessage());
+            responseDTO.setSuccess(false);
+            return responseDTO;
+        }
+        return responseDTO;
+    }
+
 
 }

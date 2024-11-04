@@ -1,7 +1,7 @@
 package com.proyecto.jirabeta.entities;
 
 public class Empleado {
-    private long id;
+    private Integer id;
     private String nombre;
     private String apellido;
     private String dni;
@@ -9,11 +9,11 @@ public class Empleado {
     private float capacity;
     private boolean disponible;
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
