@@ -14,12 +14,14 @@ public interface EmpleadoDAO {
 
     void eliminarEmpleadoById(Integer id) throws DAOException, EntityNotFoundExcepcion;
 
-    void actualizarEmpleado(Empleado empleado) throws DAOException, EntityNotFoundExcepcion;
+    void actualizarEmpleado(Empleado empleado) throws DAOException;
 
     Empleado obtenerEmpleadoByDni (String dni) throws DAOException, EntityNotFoundExcepcion;
     Empleado obtenerEmpleadoById (Integer id) throws DAOException, EntityNotFoundExcepcion;
 
-    List<Empleado> listarEmpleados () throws DAOException;
+    List<Empleado> listarEmpleados () throws DAOException, EntityNotFoundExcepcion;
+
+    public List<Empleado> listarEmpleadosByIdProyecto(Integer idProyecto) throws DAOException, EntityNotFoundExcepcion;
 
 
 }

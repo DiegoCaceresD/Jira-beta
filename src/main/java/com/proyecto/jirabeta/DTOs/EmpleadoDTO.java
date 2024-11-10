@@ -1,5 +1,7 @@
 package com.proyecto.jirabeta.DTOs;
 
+import com.proyecto.jirabeta.entities.Proyecto;
+
 public class EmpleadoDTO {
     private Integer id;
     private String nombre;
@@ -8,6 +10,7 @@ public class EmpleadoDTO {
     private String dni;
     private float capacity;
     private boolean disponible;
+    private ProyectoDTO proyectoDTO;
 
     public Integer getId() {
         return id;
@@ -65,6 +68,14 @@ public class EmpleadoDTO {
         this.disponible = disponible;
     }
 
+    public ProyectoDTO getProyectoDTO() {
+        return proyectoDTO;
+    }
+
+    public void setProyectoDTO(ProyectoDTO proyectoDTO) {
+        this.proyectoDTO = proyectoDTO;
+    }
+
     @Override
     public String toString() {
         return "EmpleadoDTO{" +
@@ -75,6 +86,7 @@ public class EmpleadoDTO {
                 ", dni='" + dni + '\'' +
                 ", capacity=" + capacity +
                 ", disponible=" + disponible +
+                ", proyectoDTO=" + proyectoDTO +
                 '}';
     }
 }

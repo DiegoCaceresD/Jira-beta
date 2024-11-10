@@ -4,6 +4,14 @@ import com.proyecto.jirabeta.DTOs.EmpleadoDTO;
 import com.proyecto.jirabeta.entities.Empleado;
 
 public class EmpleadoMapper {
+    ProyectoMapper pm = new ProyectoMapper();
+
+    public EmpleadoMapper(ProyectoMapper pm) {
+        this.pm = pm;
+    }
+
+    public EmpleadoMapper() {
+    }
 
     public Empleado empleadoDtoToEmpleado(EmpleadoDTO empleadoDTO){
         Empleado empleado = new Empleado();
@@ -14,6 +22,7 @@ public class EmpleadoMapper {
         empleado.setEmail(empleadoDTO.getEmail());
         empleado.setCapacity(empleadoDTO.getCapacity());
         empleado.setDisponible(empleadoDTO.isDisponible());
+        empleado.setProyecto(pm.proyectoDTOtoProyecto(empleadoDTO.getProyectoDTO()));
         return empleado;
     }
 
@@ -26,6 +35,32 @@ public class EmpleadoMapper {
         empleadoDTO.setEmail(empleado.getEmail());
         empleadoDTO.setCapacity(empleado.getCapacity());
         empleadoDTO.setDisponible(empleado.isDisponible());
+        empleadoDTO.setProyectoDTO(pm.proyectoToProyectoDTO(empleado.getProyecto()));
         return empleadoDTO;
+    }
+
+    public Empleado actualizarEmpleadoEnMemoria(Empleado empleado, EmpleadoDTO nuevoEmpleado){
+        if (nuevoEmpleado.getId() != null){
+            empleado.setId(nuevoEmpleado.getId());
+        }
+        if (nuevoEmpleado.getNombre() != null){
+            empleado.setNombre(nuevoEmpleado.getNombre());
+        }
+        if (nuevoEmpleado.getApellido() != null){
+            empleado.setApellido(nuevoEmpleado.getApellido());
+        }
+        if (nuevoEmpleado.getDni() != null){
+            empleado.setDni(nuevoEmpleado.getDni());
+        }
+        if (nuevoEmpleado.getEmail() != null){
+            empleado.setEmail(nuevoEmpleado.getEmail());
+        }
+        if (nuevoEmpleado.getCapacity() != 0){
+            empleado.setCapacity(nuevoEmpleado.getCapacity());
+        }
+        if (nuevoEmpleado.getProyectoDTO() != null){
+            empleado.setProyecto(pm.proyectoDTOtoProyecto(nuevoEmpleado.getProyectoDTO()));
+        }
+        return empleado;
     }
 }

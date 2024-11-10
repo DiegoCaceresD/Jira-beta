@@ -7,22 +7,24 @@ import com.proyecto.jirabeta.entities.Tarea;
 
 public class TareaMapper {
     EmpleadoMapper em = new EmpleadoMapper();
+    ProyectoMapper pm = new ProyectoMapper();
     TareaDTO tareaDTO = new TareaDTO();
     Tarea tarea = new Tarea();
 
     public TareaMapper() {
     }
 
-    public TareaMapper(EmpleadoMapper em, TareaDTO tareaDTO, Tarea tarea) {
+    public TareaMapper(EmpleadoMapper em, ProyectoMapper pm, TareaDTO tareaDTO, Tarea tarea) {
         this.em = em;
+        this.pm = pm;
         this.tareaDTO = tareaDTO;
         this.tarea = tarea;
     }
 
     public Tarea tareaDtoToTarea(TareaDTO tareaDTO) {
 
-        if (tareaDTO.getResponsable() != null){
-            Empleado empleado = em.empleadoDtoToEmpleado(tareaDTO.getResponsable());
+        if (tareaDTO.getResponsableDTO() != null){
+            Empleado empleado = em.empleadoDtoToEmpleado(tareaDTO.getResponsableDTO());
             tarea.setResponsable(empleado);
         }
         tarea.setHorasEstimadas(tareaDTO.getHorasEstimadas());
@@ -30,20 +32,20 @@ public class TareaMapper {
         tarea.setDescripcion(tareaDTO.getDescripcion());
         tarea.setEstimacion(tareaDTO.getEstimacion());
         tarea.setPrioridad(tareaDTO.getPrioridad());
-//        tarea.setProyecto(tareaDTO.setProyecto());
+        tarea.setProyecto(pm.proyectoDTOtoProyecto(tareaDTO.getProyectoDTO()));
         return tarea;
     }
 
-    public Tarea tareaToTareaDTO(Tarea tarea) {
+    public TareaDTO tareaToTareaDTO(Tarea tarea) {
         EmpleadoDTO empleadoDTO = em.empleadoToEmpleadoDto(tarea.getResponsable());
         tareaDTO.setHorasEstimadas(tarea.getHorasEstimadas());
         tareaDTO.setTitulo(tarea.getTitulo());
         tareaDTO.setDescripcion(tarea.getDescripcion());
         tareaDTO.setEstimacion(tarea.getEstimacion());
         tareaDTO.setPrioridad(tarea.getPrioridad());
-        tareaDTO.setResponsable(empleadoDTO);
-//        tarea.setProyecto(tareaDTO.setProyecto());
-        return tarea;
+        tareaDTO.setResponsableDTO(empleadoDTO);
+        tareaDTO.setProyectoDTO(pm.proyectoToProyectoDTO(tarea.getProyecto()));
+        return tareaDTO;
     }
 
     public Tarea actualizarTareaEnMemoria(Tarea tareaToUpdate, TareaDTO nuevaTarea){
@@ -60,12 +62,12 @@ public class TareaMapper {
         if (nuevaTarea.getPrioridad() != null){
             tareaToUpdate.setPrioridad(nuevaTarea.getPrioridad());
         }
-        if (nuevaTarea.getResponsable() != null){
-            Empleado empleado = em.empleadoDtoToEmpleado(tareaDTO.getResponsable());
+        if (nuevaTarea.getResponsableDTO() != null){
+            Empleado empleado = em.empleadoDtoToEmpleado(tareaDTO.getResponsableDTO());
             tareaToUpdate.setResponsable(empleado);
         }
-        if (nuevaTarea.getProyecto() != null){
-            tareaToUpdate.setProyecto(nuevaTarea.getProyecto());
+        if (nuevaTarea.getProyectoDTO() != null){
+            tareaToUpdate.setProyecto(pm.proyectoDTOtoProyecto(nuevaTarea.getProyectoDTO()));
         }
 
         tareaToUpdate.setHorasEstimadas(nuevaTarea.getHorasEstimadas());

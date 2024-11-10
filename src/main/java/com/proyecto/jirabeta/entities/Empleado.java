@@ -8,6 +8,7 @@ public class Empleado {
     private String email;
     private float capacity;
     private boolean disponible;
+    private Proyecto proyecto;
 
     public Integer getId() {
         return id;
@@ -65,6 +66,14 @@ public class Empleado {
         this.disponible = disponible;
     }
 
+    public Proyecto getProyecto() {
+        return proyecto;
+    }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
     @Override
     public String toString() {
         return "Empleado{" +
@@ -75,6 +84,7 @@ public class Empleado {
                 ", email='" + email + '\'' +
                 ", capacity=" + capacity +
                 ", disponible=" + disponible +
+                ", proyecto=" + proyecto +
                 '}';
     }
 }

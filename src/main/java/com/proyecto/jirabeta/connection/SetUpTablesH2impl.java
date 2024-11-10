@@ -10,18 +10,18 @@ public class SetUpTablesH2impl implements SetUpTablesDAO {
         Connection c = DBManager.connect();
 
         String sqlProyectos = "CREATE TABLE proyectos (id INTEGER IDENTITY, nombre VARCHAR(256) UNIQUE)";
-        String sqlEmpleados = "CREATE TABLE empleados (id INTEGER IDENTITY, nombre VARCHAR(256), apellido VARCHAR(256), dni VARCHAR(256) UNIQUE , email  VARCHAR(256), capacity FLOAT, disponible BIT)";
-        String sqlTareas = "CREATE TABLE tareas (id INTEGER IDENTITY PRIMARY KEY, horasEstimadas FLOAT, titulo VARCHAR(256) UNIQUE , descripcion VARCHAR(256), estimacion VARCHAR(256), prioridad VARCHAR(256), responsable INTEGER,proyecto INTEGER,     FOREIGN KEY (responsable) REFERENCES empleados(id), FOREIGN KEY (proyecto) REFERENCES proyectos(id))";
+        String sqlEmpleados = "CREATE TABLE empleados (id INTEGER IDENTITY, nombre VARCHAR(256), apellido VARCHAR(256), dni VARCHAR(256) UNIQUE , email  VARCHAR(256), capacity FLOAT, disponible BIT, proyecto INTEGER, FOREIGN KEY (proyecto) REFERENCES proyectos(id) ON DELETE SET NULL )";
+        String sqlTareas = "CREATE TABLE tareas (id INTEGER IDENTITY PRIMARY KEY, horasEstimadas FLOAT, titulo VARCHAR(256) UNIQUE , descripcion VARCHAR(256), estimacion VARCHAR(256), prioridad VARCHAR(256), responsable INTEGER NULL,proyecto INTEGER,     FOREIGN KEY (responsable) REFERENCES empleados(id), FOREIGN KEY (proyecto) REFERENCES proyectos(id) ON DELETE CASCADE)";
         try {
             Statement s = c.createStatement();
             DatabaseMetaData metaData = c.getMetaData();
             ResultSet rs = metaData.getTables(null, null, "PROYECTOS", null);
             //si la tabla proyectos existe no creo ninguna
-            if (!rs.next()){
+            if (!rs.next()) {
                 s.execute(sqlProyectos);
                 s.execute(sqlEmpleados);
                 s.execute(sqlTareas);
-            }else {
+            } else {
                 System.out.println("Las tablas ya se encuentran creadas");
             }
 

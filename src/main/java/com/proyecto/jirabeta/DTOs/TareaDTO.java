@@ -1,7 +1,5 @@
 package com.proyecto.jirabeta.DTOs;
 
-import com.proyecto.jirabeta.entities.Empleado;
-import com.proyecto.jirabeta.entities.Proyecto;
 import com.proyecto.jirabeta.enums.eEstimacion;
 import com.proyecto.jirabeta.enums.ePrioridad;
 
@@ -12,8 +10,8 @@ public class TareaDTO {
     private String descripcion;
     private eEstimacion estimacion;
     private ePrioridad prioridad;
-    private EmpleadoDTO responsable;
-    private Proyecto proyecto;
+    private EmpleadoDTO responsableDTO;
+    private ProyectoDTO proyectoDTO;
 
     public Integer getId() {
         return id;
@@ -63,20 +61,20 @@ public class TareaDTO {
         this.prioridad = prioridad;
     }
 
-    public EmpleadoDTO getResponsable() {
-        return responsable;
+    public EmpleadoDTO getResponsableDTO() {
+        return responsableDTO;
     }
 
-    public void setResponsable(EmpleadoDTO responsable) {
-        this.responsable = responsable;
+    public void setResponsableDTO(EmpleadoDTO responsableDTO) {
+        this.responsableDTO = responsableDTO;
     }
 
-    public Proyecto getProyecto() {
-        return proyecto;
+    public ProyectoDTO getProyectoDTO() {
+        return proyectoDTO;
     }
 
-    public void setProyecto(Proyecto proyecto) {
-        this.proyecto = proyecto;
+    public void setProyectoDTO(ProyectoDTO proyectoDTO) {
+        this.proyectoDTO = proyectoDTO;
     }
 
     @Override
@@ -88,8 +86,8 @@ public class TareaDTO {
                 ", descripcion='" + descripcion + '\'' +
                 ", estimacion=" + estimacion +
                 ", prioridad=" + prioridad +
-                ", responsable=" + responsable +
-                ", proyecto=" + proyecto +
+                ", responsable=" + responsableDTO +
+                ", proyectoDTO=" + proyectoDTO +
                 '}';
     }
 }

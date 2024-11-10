@@ -22,17 +22,31 @@ public class Main {
     public static void main(String[] args) {
         SetUpTablesDAO setUpTables = new SetUpTablesH2impl();
         setUpTables.crearTablas();
-
-        ResponseDTO responseDTO = new ResponseDTO();
-        ProyectoDTO proyectoDTO = new ProyectoDTO();
-        proyectoDTO.setNombre("segundo Proyecto");
-
         ProyectoService proyectoService = new ProyectoService();
-       responseDTO = proyectoService.crearProyecto(proyectoDTO);
-        if (responseDTO.isSuccess()){
-            System.out.println(responseDTO.getData() + " creado");
+        TareaService tareaService = new TareaService();
+        EmpleadoService empleadoService = new EmpleadoService();
+
+        ResponseDTO proyectoRespo = proyectoService.obtenerProyectoByNombre("segundo Proyecto3");
+        if (proyectoRespo.isSuccess()){
+            System.out.println("PROYECTO RESPONSE: " +proyectoRespo.getData());
         }else {
-            System.out.println(responseDTO.getErrorMsg());
+            System.out.println(proyectoRespo.getErrorMsg());
         }
+
+        ResponseDTO empleadoRespo = empleadoService.obtenerEmpleadoByDni("111111");
+        if (proyectoRespo.isSuccess()){
+            System.out.println("EMPLEADO RESPONSE: " +empleadoRespo.getData());
+        }else {
+            System.out.println(empleadoRespo.getErrorMsg());
+        }
+
+        ResponseDTO tareaRespo = tareaService.listarTareasByIdProyecto(1);
+        if (tareaRespo.isSuccess()){
+            System.out.println("TAREA RESPONSE: " + tareaRespo.getData());
+        }else {
+            System.out.println(tareaRespo.getErrorMsg());
+        }
+
+
     }
 }

@@ -10,6 +10,9 @@ import com.proyecto.jirabeta.exceptions.DuplicateKeyException;
 import com.proyecto.jirabeta.exceptions.EntityNotFoundExcepcion;
 import com.proyecto.jirabeta.mapper.TareaMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class TareaService {
     TareaDAO tareaDAO = new TareaDAOH2impl();
@@ -31,7 +34,7 @@ public class TareaService {
             tareaDAO.crearTarea(tarea);
             responseDTO.setData(tarea);
             responseDTO.setSuccess(true);
-        } catch (DuplicateKeyException | DAOException e) {
+        } catch (DuplicateKeyException | DAOException | EntityNotFoundExcepcion e) {
             responseDTO.setErrorMsg(e.getMessage());
             responseDTO.setSuccess(false);
             return responseDTO;
@@ -55,20 +58,20 @@ public class TareaService {
         return responseDTO;
     }
 
-    public ResponseDTO asignarResponsable(String titulo, Integer idResponsable){
+    public ResponseDTO asignarResponsable(String titulo, Integer idResponsable) {
         ResponseDTO responseDTO = new ResponseDTO();
         EmpleadoService empleadoService = new EmpleadoService();
-        try{
+        try {
             responseDTO = empleadoService.obtenerEmpleadoById(idResponsable);
-            if (responseDTO.isSuccess()){
+            if (responseDTO.isSuccess()) {
                 tareaDAO.asignarResponsable(titulo, idResponsable);
                 responseDTO.setData("Se asigno correctamente el Responsable ID: " + idResponsable + " a la tarea: " + titulo);
                 responseDTO.setSuccess(true);
-            }else {
+            } else {
                 //Este response ya viene con el error desde EmpleadosService
                 return responseDTO;
             }
-        }catch (DAOException | EntityNotFoundExcepcion e){
+        } catch (DAOException | EntityNotFoundExcepcion e) {
             responseDTO.setSuccess(false);
             responseDTO.setErrorMsg(e.getMessage());
             return responseDTO;
@@ -76,13 +79,29 @@ public class TareaService {
         return responseDTO;
     }
 
-    public ResponseDTO eliminarTareaById(Integer idTarea){
+    public ResponseDTO eliminarTareaById(Integer idTarea) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             tareaDAO.eliminarTareaById(idTarea);
             responseDTO.setData(idTarea);
             responseDTO.setSuccess(true);
-        }catch (DAOException | EntityNotFoundExcepcion e){
+        } catch (DAOException | EntityNotFoundExcepcion e) {
+            responseDTO.setSuccess(false);
+            responseDTO.setErrorMsg(e.getMessage());
+            return responseDTO;
+        }
+        return responseDTO;
+    }
+
+    public ResponseDTO listarTareasByIdProyecto(Integer id) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<Tarea> tareaList = new ArrayList<>();
+
+        try {
+            tareaList = tareaDAO.listarTareasByIdProyecto(id);
+            responseDTO.setData(tareaList);
+            responseDTO.setSuccess(true);
+        } catch (DAOException | EntityNotFoundExcepcion e) {
             responseDTO.setSuccess(false);
             responseDTO.setErrorMsg(e.getMessage());
             return responseDTO;

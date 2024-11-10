@@ -15,20 +15,19 @@ import java.util.List;
 
 public class EmpleadoService {
 
-    ResponseDTO responseDTO = new ResponseDTO();
     EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
     EmpleadoMapper empleadoMapper = new EmpleadoMapper();
 
     public EmpleadoService() {
     }
 
-    public EmpleadoService(ResponseDTO responseDTO, EmpleadoDAO empleadoDAO, EmpleadoMapper empleadoMapper) {
-        this.responseDTO = responseDTO;
+    public EmpleadoService(EmpleadoDAO empleadoDAO, EmpleadoMapper empleadoMapper) {
         this.empleadoDAO = empleadoDAO;
         this.empleadoMapper = empleadoMapper;
     }
 
     public ResponseDTO crearEmpleado(EmpleadoDTO empleadoDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
         Empleado empleado;
         try {
             empleado = empleadoMapper.empleadoDtoToEmpleado(empleadoDTO);
@@ -43,10 +42,12 @@ public class EmpleadoService {
         return responseDTO;
     }
 
-    public ResponseDTO actualizarEmpleado(EmpleadoDTO empleadoDTO) { //todo replicar la logica de actualizar tarea
+    public ResponseDTO actualizarEmpleado(EmpleadoDTO empleadoDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
         Empleado empleado;
         try {
-            empleado = empleadoMapper.empleadoDtoToEmpleado(empleadoDTO);
+            Empleado empleadoToUpdate = empleadoDAO.obtenerEmpleadoByDni(empleadoDTO.getDni());
+            empleado = empleadoMapper.actualizarEmpleadoEnMemoria(empleadoToUpdate, empleadoDTO);
             empleadoDAO.actualizarEmpleado(empleado);
             responseDTO.setData(empleadoDTO.getDni());
             responseDTO.setSuccess(true);
@@ -59,6 +60,7 @@ public class EmpleadoService {
     }
 
     public ResponseDTO eliminarEmpleadoById(Integer id) {
+        ResponseDTO responseDTO = new ResponseDTO();
         try {
             empleadoDAO.eliminarEmpleadoById(id);
             responseDTO.setData(id);
@@ -72,6 +74,7 @@ public class EmpleadoService {
     }
 
     public ResponseDTO listarEmpleados() {
+        ResponseDTO responseDTO = new ResponseDTO();
         List<EmpleadoDTO> empleadoDTOList = new ArrayList<>();
         try {
             List<Empleado> empleadoList = empleadoDAO.listarEmpleados();
@@ -80,7 +83,7 @@ public class EmpleadoService {
             }
             responseDTO.setData(empleadoDTOList);
             responseDTO.setSuccess(true);
-        } catch (DAOException d) {
+        } catch (DAOException | EntityNotFoundExcepcion d) {
             responseDTO.setErrorMsg(d.getMessage());
             responseDTO.setSuccess(false);
             return responseDTO;
@@ -89,6 +92,7 @@ public class EmpleadoService {
     }
 
     public ResponseDTO obtenerEmpleadoByDni(String dni) {
+        ResponseDTO responseDTO = new ResponseDTO();
         try {
             Empleado empleado = empleadoDAO.obtenerEmpleadoByDni(dni);
             if (empleado != null){
@@ -104,6 +108,7 @@ public class EmpleadoService {
         return responseDTO;
     }
     public ResponseDTO obtenerEmpleadoById(Integer id) {
+        ResponseDTO responseDTO = new ResponseDTO();
         try {
             Empleado empleado = empleadoDAO.obtenerEmpleadoById(id);
             if (empleado != null){
