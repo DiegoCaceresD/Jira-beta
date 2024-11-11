@@ -110,6 +110,17 @@ public class ProyectoService {
         return responseDTO;
     }
 
-
-
+    public ResponseDTO eliminarProyectoById(Integer id){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try{
+            proyectoDAO.eliminarProyectById(id);
+            responseDTO.setData(id);
+            responseDTO.setSuccess(true);
+        }catch (EntityNotFoundExcepcion | DAOException e){
+            responseDTO.setErrorMsg(e.getMessage());
+            responseDTO.setSuccess(false);
+            return responseDTO;
+        }
+        return responseDTO;
+    }
 }

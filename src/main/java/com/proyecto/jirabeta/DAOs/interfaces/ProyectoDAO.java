@@ -1,5 +1,6 @@
 package com.proyecto.jirabeta.DAOs.interfaces;
 
+import com.proyecto.jirabeta.DTOs.ResponseDTO;
 import com.proyecto.jirabeta.entities.Proyecto;
 import com.proyecto.jirabeta.exceptions.DAOException;
 import com.proyecto.jirabeta.exceptions.DuplicateKeyException;
@@ -14,4 +15,5 @@ public interface ProyectoDAO {
     public Proyecto obtenerProyectoById(Integer id) throws DAOException, EntityNotFoundExcepcion;
     public Proyecto obtenerProyectoByNombre(String nombre) throws DAOException, EntityNotFoundExcepcion;
 
+    public void eliminarProyectById(Integer id)throws DAOException, EntityNotFoundExcepcion;
 }

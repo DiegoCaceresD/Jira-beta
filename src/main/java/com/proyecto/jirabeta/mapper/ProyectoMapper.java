@@ -2,6 +2,7 @@ package com.proyecto.jirabeta.mapper;
 
 import com.proyecto.jirabeta.DTOs.ProyectoDTO;
 import com.proyecto.jirabeta.entities.Proyecto;
+import com.proyecto.jirabeta.enums.eEstados;
 import com.proyecto.jirabeta.services.ProyectoService;
 
 public class ProyectoMapper {
@@ -23,10 +24,12 @@ public class ProyectoMapper {
         if (proyectoDTO.getTareas() != null) {
             proyecto.setTareas(proyectoDTO.getTareas());
         }
-        proyecto.setId(proyectoDTO.getId());
+        proyecto.setFechaFin(proyectoDTO.getFechaFin());
         proyecto.setNombre(proyectoDTO.getNombre());
+        proyecto.setEstado(proyectoDTO.getEstado());
         return proyecto;
     }
+
     public ProyectoDTO proyectoToProyectoDTO(Proyecto proyecto) {
         if (proyecto.getEmpleados() != null) {
             proyectoDTO.setEmpleados(proyecto.getEmpleados());
@@ -36,20 +39,22 @@ public class ProyectoMapper {
         }
         proyectoDTO.setId(proyecto.getId());
         proyectoDTO.setNombre(proyecto.getNombre());
+        proyectoDTO.setEstado(proyecto.getEstado());
+        proyectoDTO.setFechaFin(proyecto.getFechaFin());
         return proyectoDTO;
     }
 
-    public Proyecto actualizarProyectoEnMemoria(Proyecto proyectoToUpdate, ProyectoDTO nuevoProyecto){
-        if (nuevoProyecto.getId() != null){
+    public Proyecto actualizarProyectoEnMemoria(Proyecto proyectoToUpdate, ProyectoDTO nuevoProyecto) {
+        if (nuevoProyecto.getId() != null) {
             proyectoToUpdate.setId(nuevoProyecto.getId());
         }
-        if (nuevoProyecto.getNombre() != null){
+        if (nuevoProyecto.getNombre() != null) {
             proyectoToUpdate.setNombre(nuevoProyecto.getNombre());
         }
-        if (nuevoProyecto.getEmpleados() != null){
+        if (nuevoProyecto.getEmpleados() != null) {
             proyectoToUpdate.setEmpleados(nuevoProyecto.getEmpleados());
         }
-        if (nuevoProyecto.getTareas() != null){
+        if (nuevoProyecto.getTareas() != null) {
             proyectoToUpdate.setTareas(nuevoProyecto.getTareas());
         }
         return proyectoToUpdate;

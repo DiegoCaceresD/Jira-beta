@@ -3,12 +3,15 @@ package com.proyecto.jirabeta.DAOs;
 import com.proyecto.jirabeta.DAOs.interfaces.EmpleadoDAO;
 import com.proyecto.jirabeta.DAOs.interfaces.ProyectoDAO;
 import com.proyecto.jirabeta.DAOs.interfaces.TareaDAO;
+import com.proyecto.jirabeta.DTOs.ResponseDTO;
 import com.proyecto.jirabeta.connection.DBManager;
 import com.proyecto.jirabeta.entities.Proyecto;
+import com.proyecto.jirabeta.enums.eEstados;
 import com.proyecto.jirabeta.exceptions.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +26,14 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
     @Override
     public void crearProyecto(Proyecto proyecto) throws DAOException, DuplicateKeyException {
         String nombre = proyecto.getNombre();
+        Date fechaFin = new Date(proyecto.getFechaFin().getTime());
+        String estado = String.valueOf(proyecto.getEstado());
         Connection c = DBManager.connect();
         try {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO proyectos (nombre) VALUES (?)");
+            PreparedStatement ps = c.prepareStatement("INSERT INTO proyectos (nombre, fechaFin, estado) VALUES (?, ?, ?)");
             ps.setString(1, nombre);
+            ps.setDate(2,fechaFin);
+            ps.setString(3, estado);
             ps.executeUpdate();
             c.commit();
         } catch (SQLException e) {
@@ -60,6 +67,8 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
                 Proyecto proyecto = new Proyecto();
                 proyecto.setId(rs.getInt("id"));
                 proyecto.setNombre(rs.getString("nombre"));
+                proyecto.setFechaFin(rs.getDate("Fechafin"));
+                proyecto.setEstado(eEstados.valueOf(rs.getString("estado")));
                 proyectoList.add(proyecto);
             }
             if (proyectoList.isEmpty()){
@@ -94,6 +103,8 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
             if (rs.next()) {
                 proyecto.setId(rs.getInt("id"));
                 proyecto.setNombre(rs.getString("nombre"));
+                proyecto.setFechaFin(rs.getDate("Fechafin"));
+                proyecto.setEstado(eEstados.valueOf(rs.getString("estado")));
             } else {
                 throw new EntityNotFoundExcepcion("proyecto", id);
             }
@@ -127,6 +138,8 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
             if (rs.next()) {
                 proyecto.setId(rs.getInt("id"));
                 proyecto.setNombre(rs.getString("nombre"));
+                proyecto.setFechaFin(rs.getDate("Fechafin"));
+                proyecto.setEstado(eEstados.valueOf(rs.getString("estado")));
             } else {
                 throw new EntityNotFoundExcepcion("proyecto", nombre);
             }
@@ -146,5 +159,32 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
             }
         }
         return proyecto;
+    }
+
+    @Override
+    public void eliminarProyectById(Integer id) throws DAOException, EntityNotFoundExcepcion {
+        Connection c = DBManager.connect();
+        try {
+            String sql = "DELETE FROM proyectos WHERE id = '" + id + "'";
+            Statement s = c.createStatement();
+            int registrosAfectados = s.executeUpdate(sql);
+            if (registrosAfectados == 0) {
+                throw new EntityNotFoundExcepcion("Proyecto", id);
+            }
+            c.commit();
+        } catch (SQLException e) {
+            try {
+                c.rollback();
+            } catch (SQLException ex) {
+                throw new RollbackException("Error al rollbackear", ex);
+            }
+            throw new DAOException("Error al eliminar el proyecto");
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException e1) {
+                logger.error("Error al cerrar la conexion con la base de datos");
+            }
+        }
     }
 }
