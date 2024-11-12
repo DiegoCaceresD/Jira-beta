@@ -80,14 +80,6 @@ public class ProyectoTableModel extends AbstractTableModel {
         return tiposColumnas[col];
     }
 
-    public List<ProyectoDTO> getContenido() {
-        return proyectoList;
-    }
-
-    public void setContenido(List<ProyectoDTO> contenido) {
-        this.proyectoList = contenido;
-    }
-
     public void removeProyecto(int rowIndex, JPanel panelPrincipal) {
         ResponseDTO responseDTO;
         ProyectoService proyectoService = new ProyectoService();

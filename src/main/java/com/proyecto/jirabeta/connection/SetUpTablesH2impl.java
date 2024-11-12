@@ -28,15 +28,15 @@ public class SetUpTablesH2impl implements SetUpTablesDAO {
         } catch (SQLException e) {
             try {
                 c.rollback();
-                e.printStackTrace();
+                e.printStackTrace(); //todo remover
             } catch (SQLException e1) {
-                e1.printStackTrace();
+                e1.printStackTrace();//todo remover
             }
         } finally {
             try {
                 c.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                e.printStackTrace();//todo remover
             }
         }
 

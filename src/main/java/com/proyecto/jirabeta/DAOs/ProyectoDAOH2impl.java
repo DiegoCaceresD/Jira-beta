@@ -24,7 +24,7 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
     }
 
     @Override
-    public void crearProyecto(Proyecto proyecto) throws DAOException, DuplicateKeyException {
+    public Proyecto crearProyecto(Proyecto proyecto) throws DAOException, DuplicateKeyException {
         String nombre = proyecto.getNombre();
         Date fechaFin = new Date(proyecto.getFechaFin().getTime());
         String estado = String.valueOf(proyecto.getEstado());
@@ -35,7 +35,15 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
             ps.setDate(2,fechaFin);
             ps.setString(3, estado);
             ps.executeUpdate();
+
+            //obtengo el id generado
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int idGenerado = rs.getInt(1);
+                proyecto.setId(idGenerado);
+            }
             c.commit();
+            return proyecto;
         } catch (SQLException e) {
             try {
                 c.rollback();
@@ -179,6 +187,34 @@ public class ProyectoDAOH2impl implements ProyectoDAO {
                 throw new RollbackException("Error al rollbackear", ex);
             }
             throw new DAOException("Error al eliminar el proyecto");
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException e1) {
+                logger.error("Error al cerrar la conexion con la base de datos");
+            }
+        }
+    }
+
+    @Override
+    public void actualizarProyecto(Proyecto proyecto) throws DAOException, EntityNotFoundExcepcion{
+        String sql = "UPDATE proyectos SET nombre = ?, estado = ? WHERE id = ?";
+        Connection c = DBManager.connect();
+        try {
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, proyecto.getNombre());
+            ps.setString(2, String.valueOf(proyecto.getEstado()));
+            ps.setInt(3, proyecto.getId());
+
+            ps.executeUpdate();
+            c.commit();
+        } catch (SQLException e) {
+            try {
+                c.rollback();
+            } catch (SQLException e1) {
+                throw new RollbackException("Error al rollbackear", e1);
+            }
+            throw new DAOException("Error al actualizar el empleado", e);
         } finally {
             try {
                 c.close();

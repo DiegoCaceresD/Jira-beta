@@ -32,18 +32,18 @@ public class Jira_beta_UI extends JFrame {
         setLayout(new BorderLayout());
 
         // Agregar los paneles a la interfaz
-        ListaProyectosPanel listaProyectosPanel = new ListaProyectosPanel(proyectoList, proyectoTableModel, cardLayout, panelPrincipal);
+        ProyectoFormularioPanel formularioPanel = new ProyectoFormularioPanel(proyectoList, proyectoTableModel, cardLayout, panelPrincipal);
+
+        ListaProyectosPanel listaProyectosPanel = new ListaProyectosPanel(proyectoList, proyectoTableModel, cardLayout, panelPrincipal, formularioPanel);
         panelPrincipal.add(listaProyectosPanel, "ListaProyectos");
-        ProyectoFormularioPanel formularioPanel = new ProyectoFormularioPanel();
-        JPanel formularioProyectoPanel = formularioPanel.createFormularioPanel(panelPrincipal, proyectoList, proyectoTableModel, cardLayout);
-        panelPrincipal.add(formularioProyectoPanel, "FormularioProyecto");
+        panelPrincipal.add(formularioPanel, "FormularioProyecto");
 
         add(panelPrincipal, BorderLayout.CENTER);
         pack();
         setVisible(true);
     }
 
-    public List<ProyectoDTO> cargarProyectos() {
+    private List<ProyectoDTO> cargarProyectos() {
         List<ProyectoDTO> proyectos = new ArrayList<>();
         ResponseDTO responseDTO = new ProyectoService().listarProyectos();
         if (responseDTO.isSuccess()) {

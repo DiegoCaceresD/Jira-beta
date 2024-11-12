@@ -71,7 +71,6 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
 
     @Override
     public void actualizarEmpleado(Empleado empleado) throws DAOException{
-
         String sql = "UPDATE empleados SET nombre = ?, apellido = ?, dni = ?, capacity = ?, disponible = ?, proyecto = ? WHERE dni = ?";
         Connection c = DBManager.connect();
         try {
@@ -232,7 +231,7 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
                 throw new EntityNotFoundExcepcion("No hay empleados cargados");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace();//todo remover
             try {
                 c.rollback();
             } catch (SQLException e1) {

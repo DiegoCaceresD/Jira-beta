@@ -102,7 +102,6 @@ public class TareaDAOH2impl implements TareaDAO {
             } catch (SQLException e1) {
                 throw new RollbackException("Error al rollbackear", e1);
             }
-            e.printStackTrace();
             throw new DAOException("Error al actualizar la tarea", e);
         } finally {
             try {

@@ -10,10 +10,12 @@ import java.util.List;
 
 public interface ProyectoDAO {
 
-    public void crearProyecto(Proyecto proyecto) throws DAOException, DuplicateKeyException;
+    public Proyecto crearProyecto(Proyecto proyecto) throws DAOException, DuplicateKeyException;
     public List<Proyecto> listarProyectos() throws DAOException, EntityNotFoundExcepcion;
     public Proyecto obtenerProyectoById(Integer id) throws DAOException, EntityNotFoundExcepcion;
     public Proyecto obtenerProyectoByNombre(String nombre) throws DAOException, EntityNotFoundExcepcion;
 
-    public void eliminarProyectById(Integer id)throws DAOException, EntityNotFoundExcepcion;
+    public void eliminarProyectById(Integer id) throws DAOException, EntityNotFoundExcepcion;
+
+    void actualizarProyecto(Proyecto proyecto) throws DAOException, EntityNotFoundExcepcion;
 }

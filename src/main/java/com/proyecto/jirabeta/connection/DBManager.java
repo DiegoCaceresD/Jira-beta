@@ -19,7 +19,7 @@ public class DBManager {
 		try {
 			Class.forName(DB_DRIVER);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			e.printStackTrace();//todo remover
 			System.exit(0);
 		}
 		try {
@@ -29,7 +29,7 @@ public class DBManager {
 			c = DriverManager.getConnection(url, DB_USERNAME, DB_PASSWORD);
 			c.setAutoCommit(false);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace();//todo remover
 			System.exit(0);
 		}
 

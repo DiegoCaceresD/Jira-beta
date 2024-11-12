@@ -45,13 +45,31 @@ public class ProyectoService {
         Proyecto proyecto;
         try {
             proyecto = proyectoMapper.proyectoDTOtoProyecto(proyectoDTO);
-            proyectoDAO.crearProyecto(proyecto);
-            responseDTO.setData(proyecto.getNombre());
+            Proyecto proyectoCreado = proyectoDAO.crearProyecto(proyecto);
+            responseDTO.setData(proyectoMapper.proyectoToProyectoDTO(proyectoCreado));
             responseDTO.setSuccess(true);
         } catch (DAOException | DuplicateKeyException e) {
             responseDTO.setErrorMsg(e.getMessage());
             responseDTO.setSuccess(false);
         }
+        return responseDTO;
+    }
+
+    public ResponseDTO actualizarProyecto(ProyectoDTO proyectoDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Proyecto proyecto;
+        try {
+            Proyecto proyectoToUpdate = proyectoDAO.obtenerProyectoById(proyectoDTO.getId());
+            proyecto = proyectoMapper.actualizarProyectoEnMemoria(proyectoToUpdate, proyectoDTO);
+            proyectoDAO.actualizarProyecto(proyecto);
+            responseDTO.setSuccess(true);
+            responseDTO.setData(proyectoMapper.proyectoToProyectoDTO(proyecto));
+        } catch (DAOException | EntityNotFoundExcepcion e) {
+            responseDTO.setSuccess(false);
+            responseDTO.setErrorMsg(e.getMessage());
+            return responseDTO;
+        }
+
         return responseDTO;
     }
 
@@ -93,7 +111,8 @@ public class ProyectoService {
         }
         return responseDTO;
     }
-        public ResponseDTO obtenerProyectoByNombre(String nombre) {
+
+    public ResponseDTO obtenerProyectoByNombre(String nombre) {
         ResponseDTO responseDTO = new ResponseDTO();
         ProyectoDTO proyectoDTO;
         try {
@@ -110,13 +129,13 @@ public class ProyectoService {
         return responseDTO;
     }
 
-    public ResponseDTO eliminarProyectoById(Integer id){
+    public ResponseDTO eliminarProyectoById(Integer id) {
         ResponseDTO responseDTO = new ResponseDTO();
-        try{
+        try {
             proyectoDAO.eliminarProyectById(id);
             responseDTO.setData(id);
             responseDTO.setSuccess(true);
-        }catch (EntityNotFoundExcepcion | DAOException e){
+        } catch (EntityNotFoundExcepcion | DAOException e) {
             responseDTO.setErrorMsg(e.getMessage());
             responseDTO.setSuccess(false);
             return responseDTO;

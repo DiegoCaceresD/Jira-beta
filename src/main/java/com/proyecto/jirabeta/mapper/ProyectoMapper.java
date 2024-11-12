@@ -2,18 +2,14 @@ package com.proyecto.jirabeta.mapper;
 
 import com.proyecto.jirabeta.DTOs.ProyectoDTO;
 import com.proyecto.jirabeta.entities.Proyecto;
-import com.proyecto.jirabeta.enums.eEstados;
-import com.proyecto.jirabeta.services.ProyectoService;
 
 public class ProyectoMapper {
-    ProyectoDTO proyectoDTO = new ProyectoDTO();
     Proyecto proyecto = new Proyecto();
 
     public ProyectoMapper() {
     }
 
-    public ProyectoMapper(ProyectoDTO proyectoDTO, Proyecto proyecto) {
-        this.proyectoDTO = proyectoDTO;
+    public ProyectoMapper(Proyecto proyecto) {
         this.proyecto = proyecto;
     }
 
@@ -31,6 +27,7 @@ public class ProyectoMapper {
     }
 
     public ProyectoDTO proyectoToProyectoDTO(Proyecto proyecto) {
+        ProyectoDTO proyectoDTO = new ProyectoDTO();
         if (proyecto.getEmpleados() != null) {
             proyectoDTO.setEmpleados(proyecto.getEmpleados());
         }
@@ -56,6 +53,9 @@ public class ProyectoMapper {
         }
         if (nuevoProyecto.getTareas() != null) {
             proyectoToUpdate.setTareas(nuevoProyecto.getTareas());
+        }
+        if (nuevoProyecto.getEstado() != null) {
+            proyectoToUpdate.setEstado(nuevoProyecto.getEstado());
         }
         return proyectoToUpdate;
     }

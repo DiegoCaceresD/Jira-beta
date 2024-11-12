@@ -7,6 +7,7 @@ import com.proyecto.jirabeta.enums.eEstados;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class ProyectoDTO {
     private Integer id;
@@ -84,4 +85,18 @@ public class ProyectoDTO {
                 ", empleados=" + empleados +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ProyectoDTO that = (ProyectoDTO) obj;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
+
