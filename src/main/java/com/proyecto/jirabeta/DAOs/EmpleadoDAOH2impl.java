@@ -7,6 +7,7 @@ import com.proyecto.jirabeta.DTOs.ProyectoDTO;
 import com.proyecto.jirabeta.connection.DBManager;
 import com.proyecto.jirabeta.entities.Empleado;
 import com.proyecto.jirabeta.entities.Proyecto;
+import com.proyecto.jirabeta.enums.eEstados;
 import com.proyecto.jirabeta.exceptions.DAOException;
 import com.proyecto.jirabeta.exceptions.DuplicateKeyException;
 import com.proyecto.jirabeta.exceptions.EntityNotFoundExcepcion;
@@ -130,23 +131,33 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
 
     @Override
     public Empleado obtenerEmpleadoByDni(String dni) throws DAOException, EntityNotFoundExcepcion {
-        String sql = "SELECT * FROM empleados WHERE dni = '" + dni + "'";
+        String sql = "SELECT e.id AS empleado_id, e.nombre AS empleado_nombre, e.apellido, e.email, e.dni, e.capacity, e.disponible, "
+                + "p.id AS proyecto_id, p.nombre AS proyecto_nombre, p.descripcion AS proyecto_descripcion "
+                + "FROM empleados e "
+                + "INNER JOIN proyectos p ON e.proyecto = p.id "
+                + "WHERE e.dni = ?";
         Connection c = DBManager.connect();
-        Empleado empleado = new Empleado();
         ProyectoDAO proyectoDAO = new ProyectoDAOH2impl();
+        Empleado empleado;
         try {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(sql);
 
             if (rs.next()) {
-                empleado.setId(rs.getInt("id"));
-                empleado.setNombre(rs.getString("nombre"));
+                empleado = new Empleado();
+                empleado.setId(rs.getInt("empleado_id"));
+                empleado.setNombre(rs.getString("empleado_nombre"));
                 empleado.setApellido(rs.getString("apellido"));
                 empleado.setEmail(rs.getString("email"));
                 empleado.setDni(rs.getString("dni"));
                 empleado.setCapacity(rs.getFloat("capacity"));
                 empleado.setDisponible(rs.getBoolean("disponible"));
-                Proyecto proyecto = proyectoDAO.obtenerProyectoById(rs.getInt("proyecto"));//todo desacoplar
+
+                Proyecto proyecto = new Proyecto();
+                proyecto.setId(rs.getInt("proyecto_id"));
+                proyecto.setNombre(rs.getString("proyecto_nombre"));
+                proyecto.setEstado(eEstados.valueOf(rs.getString("proyecto_estado")));
+                proyecto.setFechaFin(rs.getDate("proyecto_fechafin"));
                 empleado.setProyecto(proyecto);
             } else {
                 throw new EntityNotFoundExcepcion("empleado", dni);
@@ -231,7 +242,6 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
                 throw new EntityNotFoundExcepcion("No hay empleados cargados");
             }
         } catch (SQLException e) {
-            e.printStackTrace();//todo remover
             try {
                 c.rollback();
             } catch (SQLException e1) {
@@ -248,7 +258,7 @@ public class EmpleadoDAOH2impl implements EmpleadoDAO {
         return empleadoList;
     }
 
-    public List<Empleado> listarEmpleadosByIdProyecto(Integer idProyecto) throws DAOException, EntityNotFoundExcepcion {
+    public List<Empleado> listarEmpleadosByIdProyecto(Integer idProyecto) throws DAOException {
         String sql = "SELECT * FROM empleados WHERE proyecto = ?";
         List<Empleado> empleados = new ArrayList<>();
         Connection c = DBManager.connect();

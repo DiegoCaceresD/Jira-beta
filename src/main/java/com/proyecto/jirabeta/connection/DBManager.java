@@ -1,6 +1,9 @@
 package com.proyecto.jirabeta.connection;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,13 +16,14 @@ public class DBManager {
 	private static final String DB_NAME = "/proyecto";
 	private static final String DB_USERNAME = "sa";
 	private static final String DB_PASSWORD = "";
+	private static final Logger logger = LoggerFactory.getLogger(DBManager.class);
 
 	public static Connection connect() {
 		Connection c = null;
 		try {
 			Class.forName(DB_DRIVER);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();//todo remover
+			logger.error("Driver de base de datos no encontrado: " + DB_DRIVER, e);
 			System.exit(0);
 		}
 		try {
@@ -29,7 +33,7 @@ public class DBManager {
 			c = DriverManager.getConnection(url, DB_USERNAME, DB_PASSWORD);
 			c.setAutoCommit(false);
 		} catch (SQLException e) {
-			e.printStackTrace();//todo remover
+			logger.error("Error al conectar con la base de datos en URL: " +  e);
 			System.exit(0);
 		}
 

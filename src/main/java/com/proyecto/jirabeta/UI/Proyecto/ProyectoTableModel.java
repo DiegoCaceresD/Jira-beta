@@ -2,7 +2,6 @@ package com.proyecto.jirabeta.UI.Proyecto;
 
 import com.proyecto.jirabeta.DTOs.ProyectoDTO;
 import com.proyecto.jirabeta.DTOs.ResponseDTO;
-import com.proyecto.jirabeta.entities.Proyecto;
 import com.proyecto.jirabeta.enums.eEstados;
 import com.proyecto.jirabeta.services.ProyectoService;
 

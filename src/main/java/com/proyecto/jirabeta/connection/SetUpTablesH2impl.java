@@ -1,12 +1,17 @@
 package com.proyecto.jirabeta.connection;
 
 import com.proyecto.jirabeta.DAOs.interfaces.SetUpTablesDAO;
+import com.proyecto.jirabeta.exceptions.DAOException;
+import com.proyecto.jirabeta.exceptions.RollbackException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 public class SetUpTablesH2impl implements SetUpTablesDAO {
+    private static final Logger logger = LoggerFactory.getLogger(DBManager.class);
 
-    public void crearTablas() {
+    public void crearTablas() throws DAOException {
         Connection c = DBManager.connect();
 
         String sqlProyectos = "CREATE TABLE proyectos (id INTEGER IDENTITY, nombre VARCHAR(256) UNIQUE, fechaFin DATE, estado VARCHAR (30))";
@@ -28,15 +33,15 @@ public class SetUpTablesH2impl implements SetUpTablesDAO {
         } catch (SQLException e) {
             try {
                 c.rollback();
-                e.printStackTrace(); //todo remover
             } catch (SQLException e1) {
-                e1.printStackTrace();//todo remover
+                throw new RollbackException("Error al rollbackear", e1);
             }
+            throw new DAOException("Error al crear el empleado", e);
         } finally {
             try {
                 c.close();
             } catch (SQLException e) {
-                e.printStackTrace();//todo remover
+                logger.error("Error al cerrar la conexion con la base de datos");
             }
         }
 

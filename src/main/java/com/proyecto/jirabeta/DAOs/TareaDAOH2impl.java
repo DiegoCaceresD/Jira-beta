@@ -22,6 +22,7 @@ import java.util.List;
 
 public class TareaDAOH2impl implements TareaDAO {
     private static final Logger logger = LoggerFactory.getLogger(ProyectoDAOH2impl.class);
+
     @Override
     public void crearTarea(Tarea tarea) throws DAOException, DuplicateKeyException, EntityNotFoundExcepcion {
         float horasEstimadas = tarea.getHorasEstimadas();
@@ -34,9 +35,9 @@ public class TareaDAOH2impl implements TareaDAO {
         if (tarea.getResponsable() != null) {
             responsable = tarea.getResponsable().getId();
         }
-        if (tarea.getProyecto() == null ){
-            throw new  EntityNotFoundExcepcion ("La tarea debe tener un proyecto asignado");
-        }else {
+        if (tarea.getProyecto() == null) {
+            throw new EntityNotFoundExcepcion("La tarea debe tener un proyecto asignado");
+        } else {
             proyecto = tarea.getProyecto().getId();
         }
 
@@ -79,7 +80,7 @@ public class TareaDAOH2impl implements TareaDAO {
         String descripcion = tarea.getDescripcion();
         String estimacion = String.valueOf(tarea.getEstimacion());
         String prioridad = String.valueOf(tarea.getPrioridad());
-        Integer responsable = tarea.getResponsable().getId();;
+        Integer responsable = tarea.getResponsable().getId();
         Integer proyecto = tarea.getProyecto().getId();
 
         String sql = "UPDATE tareas SET titulo = ?, horasestimadas = ?, descripcion = ?, estimacion = ?, prioridad = ?, responsable = ?, proyecto = ?  WHERE titulo = ?";
@@ -171,24 +172,38 @@ public class TareaDAOH2impl implements TareaDAO {
 
     @Override
     public Tarea obtenerTareaPorTitulo(String titulo) throws DAOException, EntityNotFoundExcepcion {
-        String sql = "SELECT * FROM tareas WHERE titulo = '" + titulo + "'";
+        String sql = "SELECT t.id AS tarea_id, t.titulo, t.horasEstimadas, t.descripcion, t.estimacion, t.prioridad, "
+                + "e.id AS empleado_id, e.nombre AS empleado_nombre, e.apellido AS empleado_apellido, "
+                + "e.email, e.dni, e.capacity, e.disponible "
+                + "FROM tareas t "
+                + "INNER JOIN empleados e ON t.responsable = e.id "
+                + "WHERE t.titulo = ?";
+
         Connection c = DBManager.connect();
-        Tarea tarea = new Tarea();
-        EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
-        Empleado empleado;
+        Tarea tarea;
+
         try {
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery(sql);
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, titulo);
+            ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                tarea.setId(rs.getInt("id"));
+                tarea = new Tarea();
+                tarea.setId(rs.getInt("tarea_id"));
                 tarea.setTitulo(rs.getString("titulo"));
                 tarea.setHorasEstimadas(rs.getInt("horasEstimadas"));
                 tarea.setDescripcion(rs.getString("descripcion"));
                 tarea.setEstimacion(eEstimacion.valueOf(rs.getString("estimacion")));
                 tarea.setPrioridad(ePrioridad.valueOf(rs.getString("prioridad")));
-                //obtengo el empleado completo por el Id para mapearlo a la tarea
-                empleado = empleadoDAO.obtenerEmpleadoById(rs.getInt("responsable")); //todo desacoplar
+
+                Empleado empleado = new Empleado();
+                empleado.setId(rs.getInt("empleado_id"));
+                empleado.setNombre(rs.getString("empleado_nombre"));
+                empleado.setApellido(rs.getString("empleado_apellido"));
+                empleado.setEmail(rs.getString("email"));
+                empleado.setDni(rs.getString("dni"));
+                empleado.setCapacity(rs.getFloat("capacity"));
+                empleado.setDisponible(rs.getBoolean("disponible"));
                 tarea.setResponsable(empleado);
             } else {
                 throw new EntityNotFoundExcepcion("tarea", titulo);
@@ -213,32 +228,47 @@ public class TareaDAOH2impl implements TareaDAO {
 
     @Override
     public List<Tarea> listarTareasByIdProyecto(Integer idProyecto) throws DAOException, EntityNotFoundExcepcion {
-        String sql = "SELECT * FROM tareas WHERE proyecto = ?";
+        String sql = "SELECT t.id AS tarea_id, t.titulo, t.horasEstimadas, t.descripcion, t.estimacion, t.prioridad, "
+                + "e.id AS empleado_id, e.nombre AS empleado_nombre, e.apellido AS empleado_apellido, e.email, e.dni, e.capacity, e.disponible, "
+                + "p.id AS proyecto_id, p.nombre AS proyecto_nombre "
+                + "FROM tareas t "
+                + "INNER JOIN empleados e ON t.responsable = e.id "
+                + "INNER JOIN proyectos p ON t.proyecto = p.id "
+                + "WHERE t.proyecto = ?";
         List<Tarea> tareaList = new ArrayList<>();
         Connection c = DBManager.connect();
-        ProyectoDAO proyectoDAO = new ProyectoDAOH2impl();
-        Proyecto proyecto;
-        EmpleadoDAO empleadoDAO = new EmpleadoDAOH2impl();
-        Empleado empleado;
 
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
+        try  {
+            PreparedStatement ps = c.prepareStatement(sql);
             ps.setInt(1, idProyecto);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Tarea tarea = new Tarea();
-                tarea.setId(rs.getInt("id"));
+                tarea.setId(rs.getInt("tarea_id"));
                 tarea.setTitulo(rs.getString("titulo"));
                 tarea.setHorasEstimadas(rs.getInt("horasEstimadas"));
                 tarea.setDescripcion(rs.getString("descripcion"));
                 tarea.setEstimacion(eEstimacion.valueOf(rs.getString("estimacion")));
                 tarea.setPrioridad(ePrioridad.valueOf(rs.getString("prioridad")));
-                //obtengo el empleado completo por el Id para mapearlo a la tarea
-                empleado = empleadoDAO.obtenerEmpleadoById(rs.getInt("responsable"));//todo desacoplar
+
+                // Crear el objeto Empleado usando los datos del JOIN
+                Empleado empleado = new Empleado();
+                empleado.setId(rs.getInt("empleado_id"));
+                empleado.setNombre(rs.getString("empleado_nombre"));
+                empleado.setApellido(rs.getString("empleado_apellido"));
+                empleado.setEmail(rs.getString("email"));
+                empleado.setDni(rs.getString("dni"));
+                empleado.setCapacity(rs.getFloat("capacity"));
+                empleado.setDisponible(rs.getBoolean("disponible"));
                 tarea.setResponsable(empleado);
-                //hago lo mismo con el proyecto
-                proyecto = proyectoDAO.obtenerProyectoById(idProyecto);
+
+                // Crear el objeto Proyecto usando los datos del JOIN
+                Proyecto proyecto = new Proyecto();
+                proyecto.setId(rs.getInt("proyecto_id"));
+                proyecto.setNombre(rs.getString("proyecto_nombre"));
                 tarea.setProyecto(proyecto);
+
                 tareaList.add(tarea);
             }
 

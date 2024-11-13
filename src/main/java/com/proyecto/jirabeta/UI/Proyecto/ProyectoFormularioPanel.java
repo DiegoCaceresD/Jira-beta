@@ -2,7 +2,6 @@ package com.proyecto.jirabeta.UI.Proyecto;
 
 import com.proyecto.jirabeta.DTOs.ProyectoDTO;
 import com.proyecto.jirabeta.DTOs.ResponseDTO;
-import com.proyecto.jirabeta.entities.Proyecto;
 import com.proyecto.jirabeta.enums.eEstados;
 import com.proyecto.jirabeta.services.ProyectoService;
 
@@ -53,7 +52,6 @@ public class ProyectoFormularioPanel extends JPanel {
         JPanel panelBotones = new JPanel();
         JButton btnAceptar = new JButton("Aceptar");
         JButton btnVolver = new JButton("Volver");
-        ;
 
         panelBotones.add(btnAceptar);
         panelBotones.add(btnVolver);
@@ -66,13 +64,6 @@ public class ProyectoFormularioPanel extends JPanel {
         btnVolver.addActionListener(e -> {
             cardLayout.show(panelPrincipal, "ListaProyectos");
         });
-    }
-
-    public void cargarProyecto(ProyectoDTO proyectoDTO) {
-        this.proyectoDTO = proyectoDTO;
-        txtNombre.setText(proyectoDTO.getNombre());
-        txtFechaFin.setText(new SimpleDateFormat("yyyy-MM-dd").format(proyectoDTO.getFechaFin()));
-        comboEstado.setSelectedItem(proyectoDTO.getEstado());
     }
 
     private void persistirProyecto() {
@@ -107,6 +98,7 @@ public class ProyectoFormularioPanel extends JPanel {
                     }
                 }
                 proyectoTableModel.fireTableDataChanged();
+                limpiarFormulario();
                 cardLayout.show(panelPrincipal, "ListaProyectos");
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(panelPrincipal, "Fecha inválida. Use el formato: yyyy-MM-dd");
@@ -114,5 +106,21 @@ public class ProyectoFormularioPanel extends JPanel {
         } else {
             JOptionPane.showMessageDialog(panelPrincipal, "Por favor completa todos los campos.");
         }
+    }
+
+    public void cargarProyecto(ProyectoDTO proyectoDTO) {
+        this.proyectoDTO = proyectoDTO;
+        if (proyectoDTO != null){
+            txtNombre.setText(proyectoDTO.getNombre());
+            txtFechaFin.setText(new SimpleDateFormat("yyyy-MM-dd").format(proyectoDTO.getFechaFin()));
+            comboEstado.setSelectedItem(proyectoDTO.getEstado());
+        }
+    }
+
+    private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtFechaFin.setText("");
+        comboEstado.setSelectedIndex(0);
+        proyectoDTO = null;
     }
 }

@@ -8,7 +8,6 @@ import com.proyecto.jirabeta.DAOs.interfaces.ProyectoDAO;
 import com.proyecto.jirabeta.DAOs.interfaces.TareaDAO;
 import com.proyecto.jirabeta.DTOs.ProyectoDTO;
 import com.proyecto.jirabeta.DTOs.ResponseDTO;
-import com.proyecto.jirabeta.connection.DBManager;
 import com.proyecto.jirabeta.entities.Empleado;
 import com.proyecto.jirabeta.entities.Proyecto;
 import com.proyecto.jirabeta.entities.Tarea;
@@ -17,9 +16,6 @@ import com.proyecto.jirabeta.exceptions.DuplicateKeyException;
 import com.proyecto.jirabeta.exceptions.EntityNotFoundExcepcion;
 import com.proyecto.jirabeta.mapper.ProyectoMapper;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 

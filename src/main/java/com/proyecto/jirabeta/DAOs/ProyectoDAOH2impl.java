@@ -1,9 +1,6 @@
 package com.proyecto.jirabeta.DAOs;
 
-import com.proyecto.jirabeta.DAOs.interfaces.EmpleadoDAO;
 import com.proyecto.jirabeta.DAOs.interfaces.ProyectoDAO;
-import com.proyecto.jirabeta.DAOs.interfaces.TareaDAO;
-import com.proyecto.jirabeta.DTOs.ResponseDTO;
 import com.proyecto.jirabeta.connection.DBManager;
 import com.proyecto.jirabeta.entities.Proyecto;
 import com.proyecto.jirabeta.enums.eEstados;

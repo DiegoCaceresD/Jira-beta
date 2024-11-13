@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Jira_beta_UI extends JFrame {
-    private JTable proyectoTable;
     private ProyectoTableModel proyectoTableModel;
     private List<ProyectoDTO> proyectoList;
     private ProyectoService proyectoService;
     private CardLayout cardLayout;
     private JPanel panelPrincipal;
+
 
     public Jira_beta_UI() {
         proyectoList = cargarProyectos();
