@@ -49,7 +49,7 @@ public class ListaProyectosPanel extends JPanel {
 
         //acciones
         btnAgregar.addActionListener(e -> {
-            cardLayout.show(panelPrincipal, "FormularioProyecto");
+            cardLayout.show(panelPrincipal, "GestionarProyecto");
         });
 
         btnEliminar.addActionListener(e -> {

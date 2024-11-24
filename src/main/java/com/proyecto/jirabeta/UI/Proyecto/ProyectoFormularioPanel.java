@@ -35,7 +35,7 @@ public class ProyectoFormularioPanel extends JPanel {
     private void createFormularioPanel() {
 
         setLayout(new BorderLayout());
-        JPanel panelFormulario = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panelFormulario = new JPanel(new GridLayout(0, 2, 10, 10));
 
         txtNombre = new JTextField(20);
         txtFechaFin = new JTextField(20);
@@ -47,8 +47,10 @@ public class ProyectoFormularioPanel extends JPanel {
         panelFormulario.add(txtFechaFin);
         panelFormulario.add(new JLabel("Estado:"));
         panelFormulario.add(comboEstado);
-        add(panelFormulario, BorderLayout.CENTER);
 
+        add(panelFormulario, BorderLayout.WEST);
+
+        // Panel para los botones en la parte inferior
         JPanel panelBotones = new JPanel();
         JButton btnAceptar = new JButton("Aceptar");
         JButton btnVolver = new JButton("Volver");

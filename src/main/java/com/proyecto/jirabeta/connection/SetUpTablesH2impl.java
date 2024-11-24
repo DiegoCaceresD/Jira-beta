@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 
 public class SetUpTablesH2impl implements SetUpTablesDAO {
-    private static final Logger logger = LoggerFactory.getLogger(DBManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(SetUpTablesH2impl.class);
 
     public void crearTablas() throws DAOException {
         Connection c = DBManager.connect();
@@ -27,7 +27,7 @@ public class SetUpTablesH2impl implements SetUpTablesDAO {
                 s.execute(sqlEmpleados);
                 s.execute(sqlTareas);
             } else {
-                System.out.println("Las tablas ya se encuentran creadas");
+                logger.info("Las tablas ya se encuentran creadas");
             }
 
         } catch (SQLException e) {

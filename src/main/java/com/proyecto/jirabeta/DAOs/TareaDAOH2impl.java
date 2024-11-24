@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TareaDAOH2impl implements TareaDAO {
-    private static final Logger logger = LoggerFactory.getLogger(ProyectoDAOH2impl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TareaDAOH2impl.class);
 
     @Override
     public void crearTarea(Tarea tarea) throws DAOException, DuplicateKeyException, EntityNotFoundExcepcion {

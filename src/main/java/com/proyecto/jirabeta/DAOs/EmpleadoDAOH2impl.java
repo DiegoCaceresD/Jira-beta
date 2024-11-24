@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class EmpleadoDAOH2impl implements EmpleadoDAO {
-    private static final Logger logger = LoggerFactory.getLogger(ProyectoDAOH2impl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmpleadoDAOH2impl.class);
 
     @Override
     public void crearEmpleado(Empleado empleado) throws DAOException, DuplicateKeyException {
